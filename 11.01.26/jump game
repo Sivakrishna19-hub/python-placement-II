@@ -1,0 +1,10 @@
+class Solution(object):
+    def canJump(self, nums):
+        farthest=0
+        for n in nums:
+            if farthest<0:
+                return False
+            elif n>farthest:
+                farthest=n
+            farthest-=1
+        return True
