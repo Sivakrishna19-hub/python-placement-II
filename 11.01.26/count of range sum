@@ -1,0 +1,33 @@
+class Solution:
+    def merge(self, p, low, mid, high, cnt, lower, higher):
+        j, k = mid + 1, mid + 1  # j: for upper, k: for lower
+
+        for i in range(low, mid + 1):
+            while j <= high and p[j] - p[i] <= higher:
+                j += 1
+            while k <= high and p[k] - p[i] < lower:
+                k += 1
+            cnt[0] += (j - k)
+
+        # Merge step (sort in-place)
+        p[low:high + 1] = sorted(p[low:high + 1])
+
+    def mergeSort(self, p, low, high, cnt, lower, higher):
+        if low >= high:
+            return
+
+        mid = low + (high - low) // 2
+        self.mergeSort(p, low, mid, cnt, lower, higher)
+        self.mergeSort(p, mid + 1, high, cnt, lower, higher)
+        self.merge(p, low, mid, high, cnt, lower, higher)
+
+    def countRangeSum(self, nums, lower, upper):
+        n = len(nums)
+        cnt = [0]  # Using a list to simulate pass-by-reference
+        p = [0] * (n + 1)
+
+        for i in range(n):
+            p[i + 1] = p[i] + nums[i]
+
+        self.mergeSort(p, 0, n, cnt, lower, upper)
+        return cnt[0]
